@@ -1,0 +1,61 @@
+---
+- name: Check if the virtualenv is specified
+  fail:
+    msg: "large_image role requires large_image_virtualenv variable"
+  when: large_image_virtualenv is not defined
+
+- name: Install numpy
+  pip:
+    name: numpy
+    virtualenv: "{{ large_image_virtualenv }}"
+
+- name: Install pil tile source system dependencies
+  apt:
+    name:
+      - libjpeg8-dev
+      - zlib1g-dev
+      - libopenjp2-7
+  become: true
+  become_user: root
+
+- name: Install Pillow
+  pip:
+    name: Pillow
+    virtualenv: "{{ large_image_virtualenv }}"
+
+- name: Install git
+  apt:
+    name: git
+  become: true
+  become_user: root
+
+- name: Import tile sources
+  include_tasks: "{{ item }}.yml"
+  loop: "{{ large_image_tile_sources }}"
+
+- import_tasks: vips.yml
+  when: large_image_include_vips
+
+- name: Set large image path as a fact
+  set_fact:
+    large_image_path: "{{ large_image_path }}"
+
+- name: Clone large image repository
+  git:
+    repo: "{{ large_image_url }}"
+    version: "{{ large_image_version }}"
+    dest: "{{ large_image_path }}"
+
+# When pip packages are installed from a path, pip module
+# does not do idempotency checks. That is why we have
+# check the path with stat module to make the task idempotent
+- name: Check if large_image package exists in virtualenv
+  stat:
+    path: "{{ large_image_virtualenv }}/large_image"
+  register: stat_results
+
+- name: Install large_image
+  pip:
+    name: "{{ large_image_path }}"
+    virtualenv: "{{ large_image_virtualenv }}"
+  changed_when: not stat_results.stat.exists

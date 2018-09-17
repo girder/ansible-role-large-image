@@ -1,0 +1,13 @@
+---
+- name: Install svs tile source system dependencies
+  apt:
+    name:
+      - libopenslide-dev
+  become: true
+  become_user: root
+
+- name: Install python dependencies
+  pip:
+    name: openslide-python
+    version: 1.1.1
+    virtualenv: "{{ large_image_virtualenv }}"

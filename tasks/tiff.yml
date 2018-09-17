@@ -1,0 +1,7 @@
+---
+- name: Install tiff tile source system dependencies
+  apt:
+    name:
+      - libtiff5-dev
+  become: true
+  become_user: root
