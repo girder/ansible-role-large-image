@@ -5,6 +5,7 @@
   pre_tasks:
 
     - name: Include scenario specific variables
+      # yamllint disable-line rule:line-length
       include_vars: "{{ lookup('env', 'MOLECULE_SCENARIO_DIRECTORY') }}/vars.yml"
 
     - name: Install python, pip and virtualenv
@@ -27,10 +28,11 @@
 
     - name: Copy test file to the container
       copy:
+        # yamllint disable-line rule:line-length
         src: "{{ lookup('env', 'MOLECULE_SCENARIO_DIRECTORY') }}/tests/request_tile_in_container.py"
         dest: "request_tile_in_container.py"
       when: not large_image_include_vips
 
   tasks:
     - include_role:
-        name: large_image
+        name: ansible-role-large-image
