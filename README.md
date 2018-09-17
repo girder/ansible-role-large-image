@@ -1,6 +1,8 @@
 girder.large_image
 ==========================
 
+[![CircleCI](https://circleci.com/gh/girder/ansible-role-large-image.svg?style=svg)](https://circleci.com/gh/girder/ansible-role-large-image)
+
 An ansible role to install large_image.
 
 Requirements
@@ -41,6 +43,10 @@ Generated Facts
 Example Playbook
 ------------------
 
+Add the large_image role to your requirements.yml file:
+
+	- src: https://github.com/girder/ansible-role-large-image
+
 Here is a playbook which installs svs and tiff tile sources
 and includes vips so that we can run conversion tasks with girder_worker.
 
@@ -49,7 +55,7 @@ and includes vips so that we can run conversion tasks with girder_worker.
 	- hosts: servers
 	  tasks:
 	  - include_role:
-		  name: large_image
+		  name: ansible-role-large-image
 		  vars:
 			large_image_virtualenv: "/path/to/a/virtualenv"
 			large_image_tile_sources:

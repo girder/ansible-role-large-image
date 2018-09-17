@@ -1,0 +1,56 @@
+---
+
+version: 2
+
+initialize-venv: &initialize-venv
+  name: Initialize Virtual Environment
+  command: |
+    python -m virtualenv ../venv || python -m venv ../venv
+    . ../venv/bin/activate
+ci-steps: &ci-steps
+  steps:
+    - checkout:
+        path: ~/ansible-role-large-image
+    - run:
+        <<: *initialize-venv
+    - run:
+        name: Run the tests
+        command: |
+          pip install docker
+          pip install molecule
+          cd ~/ansible-role-large-image
+          molecule test -s $TILE_SOURCE
+
+jobs:
+  pil:
+    machine: true
+    environment:
+      - TILE_SOURCE: "default"
+    <<: *ci-steps
+
+  mapnik:
+    machine: true
+    environment:
+      - TILE_SOURCE: "mapnik"
+    <<: *ci-steps
+
+  svs:
+    machine: true
+    environment:
+      - TILE_SOURCE: "svs"
+    <<: *ci-steps
+
+  tiff:
+    machine: true
+    environment:
+      - TILE_SOURCE: "tiff"
+    <<: *ci-steps
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - pil
+      - mapnik
+      - svs
+      - tiff
