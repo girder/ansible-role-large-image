@@ -54,3 +54,17 @@ workflows:
       - mapnik
       - svs
       - tiff
+
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - pil
+      - mapnik
+      - svs
+      - tiff
