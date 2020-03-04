@@ -16,9 +16,9 @@ ci-steps: &ci-steps
     - run:
         name: Run the tests
         command: |
-          pip install pytest
-          pip install docker
-          pip install molecule
+          pip install 'pytest==4.2.*'
+          pip install 'docker==3.7.*'
+          pip install 'molecule==2.19.*'
           cd ~/ansible-role-large-image
           molecule test -s $TILE_SOURCE
 
